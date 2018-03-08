@@ -62,7 +62,7 @@ var CHATS = [
 function Chat(props){
 	var last = props.messages.length - 1;
 	return (
-		<li className="contact row mx-0 p-3 align-items-center">
+		<li className="contact row mx-0 p-3 align-items-center" onClick={ props.onChangeChat }>
 			<div className="thumbnail col pl-0 pr-3">
 				<img className="rounded-circle" src={ props.contact.profilePic } />
 			</div>
@@ -79,6 +79,7 @@ function Chat(props){
 Chat.propTypes = {
 	contact: React.PropTypes.object.isRequired,
 	messages: React.PropTypes.array.isRequired,
+	onChangeChat: React.PropTypes.func.isRequired
 }
 
 var Application = React.createClass({
@@ -91,6 +92,10 @@ var Application = React.createClass({
 			activeChat: this.props.chats[0]
 		}
 	},
+	changeChat: function(index){
+		this.state.activeChat = this.state.chats[index];
+		this.setState( this.state );
+	},
 	render: function(){
 		return (
 			<div className="row mx-0">
@@ -98,9 +103,14 @@ var Application = React.createClass({
 					<ul className="list-unstyled mb-0">
 						{ this.state.chats.map(function(chat,index){
 							return (
-								<Chat key={index} contact={ chat.contact } messages={ chat.messages } />
+								<Chat 
+									key={index} 
+									contact={ chat.contact } 
+									messages={ chat.messages }
+									onChangeChat={ function(){ this.changeChat(index); }.bind(this) }
+									/>
 							);
-						})}
+						},this)}
 					</ul>
 				</aside>
 				<main className="d-flex flex-column justify-content-end col-12 px-4 col-lg-9 ">
