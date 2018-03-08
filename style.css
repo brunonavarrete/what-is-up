@@ -1,0 +1,38 @@
+body {
+	font-weight: 100;
+}
+aside {
+	height: 100vh;
+	border-right: solid 1px #eee;
+}
+aside li.contact {
+	border-bottom: solid 1px #eee;
+}
+aside li.contact .thumbnail {
+	flex-grow: 0;
+}
+aside li.contact .thumbnail img {
+	width: auto;
+	height: 55px;
+}
+aside li.contact .summary {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.message_content {
+	max-width: 480px;
+	border-width: 1px;
+	border-style: solid;
+}
+.message--mine .message_content {
+	margin-right: auto;
+	border-color: dodgerblue;
+}
+.message--not-mine .message_content {
+	margin-left: auto;
+	border-color: green;
+}
+.message--not-mine p {
+	text-align: right;
+}
