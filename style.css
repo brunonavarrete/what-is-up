@@ -1,8 +1,14 @@
+:root {
+	--form-height: 85px;
+}
 body {
 	font-weight: 100;
 }
-aside {
+#app > .row {
 	height: 100vh;
+	align-items: stretch;
+}
+aside {
 	border-right: solid 1px #eee;
 }
 aside li.contact {
@@ -20,10 +26,20 @@ aside li.contact .summary {
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
+main {
+	position: relative;
+	height: 100vh;
+}
+#listMessages {
+	height: calc(100vh - var(--form-height));
+	overflow-y: auto;
+}
 .message_content {
 	max-width: 480px;
 	border-width: 1px;
 	border-style: solid;
+	border-radius: 5px;
+	background-color: rgba(255,255,255,0.9);
 }
 .message--mine .message_content {
 	margin-right: auto;
@@ -31,8 +47,17 @@ aside li.contact .summary {
 }
 .message--not-mine .message_content {
 	margin-left: auto;
-	border-color: green;
+	border-color: var(--warning);
 }
 .message--not-mine p {
 	text-align: right;
+}
+#sendMessage {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	height: var(--form-height);
+}
+#sendMessage .form-control {
+	resize: none;
 }

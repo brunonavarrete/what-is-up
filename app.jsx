@@ -35,7 +35,7 @@ var CHATS = [
 						status: 'read'
 					}
 				]
-			}
+			},
 		],
 	},
 	{
@@ -113,17 +113,23 @@ var Application = React.createClass({
 						},this)}
 					</ul>
 				</aside>
-				<main className="d-flex flex-column justify-content-end col-12 px-4 col-lg-9 ">
-					{ this.state.activeChat.messages.map(function(message, index){
-						var msgClass = (message.author === 0) ? 'mine' : 'not-mine';
-						return (
-							<div key={index} className={'message message--' + msgClass + ' row mx-0 my-2'}>
-								<div className="message_content py-1 px-3">
-									<p className="small mb-0">{ message.body }</p>
+				<main className="col-lg-9 row mx-0 px-0">
+					<div id="listMessages" className="d-flex flex-column justify-content-end col-12 px-4">
+						{ this.state.activeChat.messages.map(function(message, index){
+							var msgClass = (message.author === 0) ? 'mine' : 'not-mine';
+							return (
+								<div key={index} className={'message message--' + msgClass + ' row mx-0 my-2'}>
+									<div className="message_content py-1 px-3">
+										<p className="small mb-0">{ message.body }</p>
+									</div>
 								</div>
-							</div>
-						);
-					})}
+							);
+						})}
+					</div>
+					<form id="sendMessage" className="d-flex justify-content-stretch col-12 px-4 py-3 border bg-light">
+						<textarea className="form-control"></textarea>
+						<button className="btn btn-outline-warning px-5 ml-4">Send</button>
+					</form>
 				</main>
 			</div>
 		);
