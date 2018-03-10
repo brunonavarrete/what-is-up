@@ -82,6 +82,38 @@ Chat.propTypes = {
 	onChangeChat: React.PropTypes.func.isRequired
 }
 
+var MessageForm = React.createClass({
+	propTypes: {
+		message: React.PropTypes.string,
+		chat: React.PropTypes.number,
+		sendMessage: React.PropTypes.func
+	},
+	getInitialState: function(){
+		return {
+			message: '',
+		}
+	},
+	onTypeMessage: function(e){
+		this.state.message = e.target.value;
+		this.setState(this.state);
+	},
+	onSendMessage: function(e){
+		e.preventDefault();
+		this.props.sendMessage( this.state.message );
+		this.setState({
+			message: '',
+		});
+	},
+	render: function(){
+		return (
+			<form id="sendMessage" className="d-flex justify-content-stretch col-12 px-4 py-3 border bg-light" onSubmit={ this.onSendMessage }>
+				<textarea className="form-control" onChange={ this.onTypeMessage } value={ this.state.message }></textarea>
+				<button className="btn btn-outline-warning px-5 ml-4">Send</button>
+			</form>
+		);
+	}
+});
+
 var Application = React.createClass({
 	propTypes: {
 		chats: React.PropTypes.array.isRequired	
@@ -89,12 +121,28 @@ var Application = React.createClass({
 	getInitialState: function(){
 		return {
 			chats: this.props.chats,
-			activeChat: this.props.chats[0]
+			activeChat: this.props.chats[0],
+			activeChatId: 0
 		}
 	},
 	changeChat: function(index){
 		this.state.activeChat = this.state.chats[index];
+		this.state.activeChatId = index;
 		this.setState( this.state );
+	},
+	saveChat: function(msg){
+		var newMessage = {
+			author: 0,
+			body: msg,
+			meta: [
+				{
+					timestamp: '2018/03/18',
+					status: 'read'
+				}
+			]
+		}
+		this.state.chats[this.state.activeChatId].messages.push(newMessage);
+		this.setState(this.state);
 	},
 	render: function(){
 		return (
@@ -126,10 +174,7 @@ var Application = React.createClass({
 							);
 						})}
 					</div>
-					<form id="sendMessage" className="d-flex justify-content-stretch col-12 px-4 py-3 border bg-light">
-						<textarea className="form-control"></textarea>
-						<button className="btn btn-outline-warning px-5 ml-4">Send</button>
-					</form>
+					<MessageForm sendMessage={ function(msg){ this.saveChat(msg) }.bind(this) } />
 				</main>
 			</div>
 		);
