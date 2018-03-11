@@ -114,6 +114,24 @@ var MessageForm = React.createClass({
 	}
 });
 
+var ContactForm = React.createClass({
+	render: function(){
+		return (
+			<form className="row mx-0">
+				<div className="form-group col-12">
+					<input type="text" className="form-control" placeholder="Name" />
+				</div>
+				<div className="form-group col-12">
+					<input type="number" className="form-control" placeholder="Phone number" />
+				</div>
+				<div className="form-group col-12">
+					<input type="text" className="form-control" placeholder="Profile pic url" />
+				</div>
+			</form>
+		);
+	},
+});
+
 var Application = React.createClass({
 	propTypes: {
 		chats: React.PropTypes.array.isRequired	
@@ -160,6 +178,7 @@ var Application = React.createClass({
 							);
 						},this)}
 					</ul>
+					<ContactForm />
 				</aside>
 				<main className="col-lg-9 row mx-0 px-0">
 					<div id="listMessages" className="d-flex flex-column justify-content-end col-12 px-4">
