@@ -247,7 +247,7 @@ var Application = React.createClass({
 								);
 							}))
 							:
-							(<h3>No messages in this conv.</h3>)
+							(<h6 className="text-muted font-italic">No messages yet, talk to { this.state.activeChat.contact.name }!</h6>)
 						}
 					</div>
 					<MessageForm sendMessage={ function(msg){ this.sendMessage(msg) }.bind(this) } />
