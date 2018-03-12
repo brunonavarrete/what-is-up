@@ -125,14 +125,6 @@ var ContactForm = React.createClass({
 			profilePic: ''
 		}
 	},
-	createContact: function(e){
-		e.preventDefault();
-		var contact = {
-			contact: this.state,
-			messages: [],
-		}
-		this.props.onCreateContact( contact );
-	},
 	onChangeName: function(e){
 		this.state.name = e.target.value;
 		this.setState(this.state);
@@ -144,6 +136,19 @@ var ContactForm = React.createClass({
 	onChangeProfilePic: function(e){
 		this.state.profilePic = e.target.value;
 		this.setState(this.state);
+	},
+	createContact: function(e){
+		e.preventDefault();
+		var contact = {
+			contact: this.state,
+			messages: [],
+		}
+		this.props.onCreateContact( contact );
+		this.setState({
+			name: '',
+			phone: '',
+			profilePic: ''
+		});
 	},
 	render: function(){
 		return (
