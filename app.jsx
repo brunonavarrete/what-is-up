@@ -45,16 +45,16 @@ var CHATS = [
 			profilePic: './img/scott.png'
 		},
 		messages: [
-			// {
-			// 	author: 0,
-			// 	body: 'DAMN IT!',
-			// 	meta: [
-			// 		{
-			// 			timestamp: '2018/03/18',
-			// 			status: 'read'
-			// 		}
-			// 	]
-			// },
+			{
+				author: 0,
+				body: 'DAMN IT!',
+				meta: [
+					{
+						timestamp: '2018/03/18',
+						status: 'read'
+					}
+				]
+			},
 		],
 	}
 ]
@@ -207,7 +207,7 @@ var Application = React.createClass({
 	},
 	saveContact: function(contact){
 		this.state.chats.push(contact);
-		this.setState( this.state );
+		this.changeChat( this.state.chats.length - 1);
 	},
 	render: function(){
 		return (
@@ -229,10 +229,8 @@ var Application = React.createClass({
 				</aside>
 				<main className="col-lg-9 row mx-0 px-0">
 					<div id="listMessages" className="d-flex flex-column justify-content-end col-12 px-4">
-						{ this.state.activeChat.messages.length <= 0 
+						{ this.state.activeChat.messages.length > 0 
 							? 
-							(<h3>No messages in this conv.</h3>) 
-							:
 							(this.state.activeChat.messages.map(function(message, index){
 								var msgClass = (message.author === 0) ? 'mine' : 'not-mine';
 								return (
@@ -243,6 +241,8 @@ var Application = React.createClass({
 									</div>
 								);
 							}))
+							:
+							(<h3>No messages in this conv.</h3>)
 						}
 					</div>
 					<MessageForm sendMessage={ function(msg){ this.sendMessage(msg) }.bind(this) } />
