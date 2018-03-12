@@ -45,22 +45,22 @@ var CHATS = [
 			profilePic: './img/scott.png'
 		},
 		messages: [
-			{
-				author: 0,
-				body: 'DAMN IT!',
-				meta: [
-					{
-						timestamp: '2018/03/18',
-						status: 'read'
-					}
-				]
-			},
+			// {
+			// 	author: 0,
+			// 	body: 'DAMN IT!',
+			// 	meta: [
+			// 		{
+			// 			timestamp: '2018/03/18',
+			// 			status: 'read'
+			// 		}
+			// 	]
+			// },
 		],
 	}
 ]
 
 function Chat(props){
-	var last = props.messages.length - 1;
+	var lastMessage = (props.messages.length > 0) ? props.messages[ props.messages.length - 1 ].body : 'New chat';
 	return (
 		<li className="contact row mx-0 p-3 align-items-center" onClick={ props.onChangeChat }>
 			<div className="thumbnail col pl-0 pr-3">
@@ -69,7 +69,7 @@ function Chat(props){
 			<div className="summary col px-0">
 				<h2 className="h6 my-0">{ props.contact.name }</h2>
 				<p className="small text-muted font-italic mb-0">
-					{ props.messages[last].body }
+					{ lastMessage }
 				</p>
 			</div>
 		</li>
@@ -115,22 +115,65 @@ var MessageForm = React.createClass({
 });
 
 var ContactForm = React.createClass({
+	propTypes: {
+		onCreateContact: React.PropTypes.func.isRequired
+	},
+	getInitialState: function(){
+		return {
+			name: '',
+			phone: '',
+			profilePic: ''
+		}
+	},
+	createContact: function(e){
+		e.preventDefault();
+		var contact = {
+			contact: this.state,
+			messages: [],
+		}
+		this.props.onCreateContact( contact );
+	},
+	onChangeName: function(e){
+		this.state.name = e.target.value;
+		this.setState(this.state);
+	},
+	onChangePhone: function(e){
+		this.state.phone = e.target.value;
+		this.setState(this.state);
+	},
+	onChangeProfilePic: function(e){
+		this.state.profilePic = e.target.value;
+		this.setState(this.state);
+	},
 	render: function(){
 		return (
-			<form className="row mx-0">
+			<form className="row mx-0" onSubmit={ this.createContact }>
 				<div className="form-group col-12">
-					<input type="text" className="form-control" placeholder="Name" />
+					<input type="text" className="form-control form-control-sm" placeholder="Name" 
+					value={ this.state.name }
+					onChange={ this.onChangeName }  />
 				</div>
 				<div className="form-group col-12">
-					<input type="number" className="form-control" placeholder="Phone number" />
+					<input type="number" className="form-control form-control-sm" placeholder="Phone number" 
+					value={ this.state.phone }
+					onChange={ this.onChangePhone }  />
 				</div>
 				<div className="form-group col-12">
-					<input type="text" className="form-control" placeholder="Profile pic url" />
+					<input type="text" className="form-control form-control-sm" placeholder="Profile pic url" 
+					value={ this.state.profilePic }
+					onChange={ this.onChangeProfilePic }  />
+				</div>
+				<div className="form-group col-12">
+					<input type="submit" className="btn btn-outline-warning ox-4 py-1" value="Add" />
 				</div>
 			</form>
 		);
 	},
 });
+
+function EmptyMsg(){
+	<h3>No msg</h3>
+}
 
 var Application = React.createClass({
 	propTypes: {
@@ -148,7 +191,7 @@ var Application = React.createClass({
 		this.state.activeChatId = index;
 		this.setState( this.state );
 	},
-	saveChat: function(msg){
+	sendMessage: function(msg){
 		var newMessage = {
 			author: 0,
 			body: msg,
@@ -161,6 +204,10 @@ var Application = React.createClass({
 		}
 		this.state.chats[this.state.activeChatId].messages.push(newMessage);
 		this.setState(this.state);
+	},
+	saveContact: function(contact){
+		this.state.chats.push(contact);
+		this.setState( this.state );
 	},
 	render: function(){
 		return (
@@ -178,22 +225,27 @@ var Application = React.createClass({
 							);
 						},this)}
 					</ul>
-					<ContactForm />
+					<ContactForm onCreateContact={ function(contact){ this.saveContact(contact) }.bind(this) } />
 				</aside>
 				<main className="col-lg-9 row mx-0 px-0">
 					<div id="listMessages" className="d-flex flex-column justify-content-end col-12 px-4">
-						{ this.state.activeChat.messages.map(function(message, index){
-							var msgClass = (message.author === 0) ? 'mine' : 'not-mine';
-							return (
-								<div key={index} className={'message message--' + msgClass + ' row mx-0 my-2'}>
-									<div className="message_content py-1 px-3">
-										<p className="small mb-0">{ message.body }</p>
+						{ this.state.activeChat.messages.length <= 0 
+							? 
+							(<h3>No messages in this conv.</h3>) 
+							:
+							(this.state.activeChat.messages.map(function(message, index){
+								var msgClass = (message.author === 0) ? 'mine' : 'not-mine';
+								return (
+									<div key={index} className={'message message--' + msgClass + ' row mx-0 my-2'}>
+										<div className="message_content py-1 px-3">
+											<p className="small mb-0">{ message.body }</p>
+										</div>
 									</div>
-								</div>
-							);
-						})}
+								);
+							}))
+						}
 					</div>
-					<MessageForm sendMessage={ function(msg){ this.saveChat(msg) }.bind(this) } />
+					<MessageForm sendMessage={ function(msg){ this.sendMessage(msg) }.bind(this) } />
 				</main>
 			</div>
 		);
